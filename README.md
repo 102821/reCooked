@@ -1,6 +1,6 @@
 # Recooked
 
-> **Je bent niet cooked. Je gaat juist weer koken.**
+> **You are not cooked. We are going to cook.**
 
 Recooked is een mobile-first receptenplatform dat Generatie Z inspireert om zelf gezond en lekker te koken, en dat te delen met anderen. Gemaakt in opdracht van de **GLR Food Freaks** (Grafisch Lyceum Rotterdam) als antwoord op de *ontkoking*: jongeren koken steeds minder zelf.
 
