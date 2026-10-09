@@ -5,12 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reCooked</title>
     <link rel="stylesheet" href="/css/homestyle.css">
-
 </head>
 
 <body>
+    <div class="site-shell">
+        <header class="site-header">
+            <a class="brand" href="homepage.html" aria-label="reCooked home">
+                <strong>reCooked</strong>
+                <span class="brand-mark" aria-hidden="true">🍲</span>
+            </a>
 
+            <h1>Home</h1>
 
-    
+            <nav class="main-nav" aria-label="Main navigation">
+                <a class="menu-link" href="user/login.html">
+                    <span class="menu-icon" aria-hidden="true">☰</span>
+                    <span>Login/sign up</span>
+                </a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="hero-title">
+                <div class="hero-image image-placeholder">
+                    <span>Hero image</span>
+                </div>
+                <div class="hero-content">
+                    <p class="logo-text" id="hero-title">reCooked</p>
+                    <p class="tagline">Find it. Cook it. Love it.</p>
+                </div>
+            </section>
+
+            <section class="recipe-section" id="recipes" aria-labelledby="recipes-title">
+                <h2 id="recipes-title">explore recipes</h2>
+                <div class="recipe-grid">
+                    <a class="recipe-card" href="overzichtspagina/overzichtspagina1.html">
+                        <h3>Pasta</h3>
+                        <div class="card-image image-placeholder"><span>Recipe image</span></div>
+                    </a>
+                    <a class="recipe-card" href="overzichtspagina/overzichtspagina2.html">
+                        <h3>dessert</h3>
+                        <div class="card-image image-placeholder"><span>Recipe image</span></div>
+                    </a>
+                    <a class="recipe-card" href="overzichtspagina/overzichtspagina3.html">
+                        <h3>overige recepten</h3>
+                        <div class="card-image image-placeholder"><span>Recipe image</span></div>
+                    </a>
+                </div>
+            </section>
+
+            <section class="about-section" aria-labelledby="about-title">
+                <div class="about-title">
+                    <p class="eyebrow" id="about-title">• About reCooked •</p>
+                    <p class="slogan slogan-find">Find it.</p>
+                    <p class="slogan slogan-cook">Cook it.</p>
+                    <p class="slogan slogan-love">Love it</p>
+                    <div class="about-image image-placeholder"><span>About image</span></div>
+                </div>
+
+                <div class="about-copy">
+                    <div class="about-feature image-placeholder"><span>Feature image</span></div>
+                    <p>We offer recipes for the younger generation so that they will have an easier time cooking and have more fun doing it as well.</p>
+                    <p>Not only that, in this place, you're also able to place your own recipe(s).</p>
+                    <p><strong>So what are you waiting for? Check it out!</strong></p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer" id="socials">
+            <a href="#socials">socials</a>
+            <span class="footer-menu" aria-hidden="true">☰</span>
+            <span>footer</span>
+            <small>reCooked copyright 2026 ©</small>
+        </footer>
+    </div>
 </body>
 </html>
