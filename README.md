@@ -33,3 +33,13 @@ Gehashte wachtwoorden, prepared statements, ge-escapete output en rolcontrole aa
 Edmilson Bakor · Salim Ezzine · Mokhless Kadiri
 
 Schoolproject *Stop de ontkoking*, Grafisch Lyceum Rotterdam, 2026
+
+Stappen voor php:
+
+1. open php storm
+2. open clone repository -> jouw github account (ff inloggen)
+3. als je cloned, wees bewust waar het is opgeslagen op de PC
+4. git pull/push en dat is het. 
+ 
+ 
+Voor PHP werken en github
