@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reCooked</title>
-    <link rel="stylesheet" href="/css/homestyle.css">
+    <link rel="stylesheet" href="css/homestyle.css">
 </head>
 
 <body>
@@ -12,23 +12,35 @@
         <header class="site-header">
             <a class="brand" href="homepage.html" aria-label="reCooked home">
                 <strong>reCooked</strong>
-                <span class="brand-mark" aria-hidden="true">🍲</span>
+                <img class="brand-mark" src="imgrecooked/homepageimg/recooked_logo.png" alt="" aria-hidden="true">
             </a>
 
             <h1>Home</h1>
 
             <nav class="main-nav" aria-label="Main navigation">
-                <a class="menu-link" href="user/login.html">
-                    <span class="menu-icon" aria-hidden="true">☰</span>
-                    <span>Login/sign up</span>
-                </a>
+                <div class="dropdown">
+                    <button class="dropdown-toggle menu-link" type="button"
+                            aria-label="Open menu" aria-expanded="false" aria-controls="main-menu">
+                        <span class="menu-icon" aria-hidden="true">☰</span>
+                    </button>
+
+                    <!-- Change the href of the 3 links below -->
+                    <ul class="dropdown-menu" id="main-menu">
+                        <li><a href="overzichtspagina/overzichtspagina1.html">Pasta</a></li>
+                        <li><a href="overzichtspagina/overzichtspagina2.html">Desserts</a></li>
+                        <li><a href="overzichtspagina/overzichtspagina3.html">Overige recipes</a></li>
+                    </ul>
+                </div>
+                <a class="login-link" href="user/login.html">Login / sign up</a>
             </nav>
         </header>
 
         <main>
             <section class="hero" aria-labelledby="hero-title">
+                <div class="hero-image">
+                    <img src="imgrecooked/homepageimg/heroimg.png" alt="Hero image">
+                </div>
                 <div class="hero-content">
-                    <div class="hero-image"><img src="imgrecooked/homepageimg/heroimg.png" alt="Hero image"></div>
                     <p class="logo-text" id="hero-title">reCooked</p>
                     <p class="tagline">Find it. Cook it. Love it.</p>
                 </div>
@@ -58,11 +70,15 @@
                     <p class="slogan slogan-find">Find it.</p>
                     <p class="slogan slogan-cook">Cook it.</p>
                     <p class="slogan slogan-love">Love it</p>
-                    <div class="about-image image-placeholder"><span>About image</span></div>
+                    <div class="about-image image-placeholder">
+                        <img src="imgrecooked/homepageimg/aboutimg.png" alt="A prepared dish">
+                    </div>
                 </div>
 
                 <div class="about-copy">
-                    <div class="about-feature image-placeholder"><span>Feature image</span></div>
+                    <div class="about-feature image-placeholder">
+                        <img src="imgrecooked/homepageimg/burger%20img.png" alt="A burger">
+                    </div>
                     <p>We offer recipes for the younger generation so that they will have an easier time cooking and have more fun doing it as well.</p>
                     <p>Not only that, in this place, you're also able to place your own recipe(s).</p>
                     <p><strong>So what are you waiting for? Check it out!</strong></p>
@@ -71,11 +87,25 @@
         </main>
 
         <footer class="site-footer" id="socials">
-            <a href="#socials">socials</a>
-            <span class="footer-menu" aria-hidden="true">☰</span>
-            <span>footer</span>
+            <div class="dropdown dropdown-up">
+                <button class="dropdown-toggle" type="button"
+                        aria-expanded="false" aria-controls="socials-menu">
+                    <span class="footer-menu" aria-hidden="true">☰</span>
+                    <span>socials</span>
+                </button>
+
+                
+                <ul class="dropdown-menu" id="socials-menu">
+                    <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+                    <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></li>
+                    <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a></li>
+                </ul>
+            </div>
+
             <small>reCooked copyright 2026 ©</small>
         </footer>
     </div>
+
+    <script src="js/dropdown.js"></script>
 </body>
 </html>

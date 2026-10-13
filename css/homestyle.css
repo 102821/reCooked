@@ -20,7 +20,7 @@ html {
 
 body {
     margin: 0;
-    background: #202020;
+    background: #fff;
     color: var(--ink);
     font-family: Arial, sans-serif;
 }
@@ -30,12 +30,19 @@ a {
     text-decoration: none;
 }
 
+img,
+video {
+    max-width: 100%;
+}
+
 .site-shell {
-    width: min(100%, var(--max-width));
+    width: 100%;
     margin: 0 auto;
     background: #fff;
     min-height: 100vh;
 }
+
+/* ---------- Header ---------- */
 
 .site-header {
     align-items: center;
@@ -43,11 +50,12 @@ a {
     grid-template-columns: 1fr auto 1fr;
     min-height: 58px;
     padding: 0 22px;
+    position: relative;
+    z-index: 20; /* keeps the dropdown above the hero image */
 }
 
 .brand,
-.main-nav,
-.menu-link {
+.main-nav {
     align-items: center;
     display: flex;
 }
@@ -59,7 +67,10 @@ a {
 }
 
 .brand-mark {
-    font-size: 1.4rem;
+    display: block;
+    height: 32px;
+    object-fit: contain;
+    width: 52px;
 }
 
 .site-header h1 {
@@ -69,6 +80,7 @@ a {
 }
 
 .main-nav {
+    gap: 14px;
     justify-content: flex-end;
 }
 
@@ -76,14 +88,107 @@ a {
     font-size: 1.15rem;
     font-style: italic;
     font-weight: 700;
-    gap: 8px;
+}
+
+.login-link {
+    font-size: 1.15rem;
+    font-style: italic;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .menu-icon,
 .footer-menu {
     font-size: 1.8rem;
-    line-height: 0.8;
+    line-height: 0.5;
 }
+
+/* ---------- Dropdowns (header menu + footer socials) ---------- */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    align-items: center;
+    background: none;
+    border: 0;
+    border-radius: 5px;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    gap: 8px;
+    padding: 6px 4px;
+    transition: color 0.2s;
+}
+
+.dropdown-toggle:hover,
+.dropdown.is-open .dropdown-toggle {
+    color: var(--green);
+}
+
+.dropdown-toggle:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
+.dropdown-menu {
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 7px 16px rgb(0 0 0 / 22%);
+    list-style: none;
+    margin: 0;
+    min-width: 190px;
+    opacity: 0;
+    padding: 6px;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    transform: translateY(-6px);
+    transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+    visibility: hidden;
+    z-index: 30;
+}
+
+.dropdown.is-open .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.dropdown-menu a {
+    border-radius: 5px;
+    color: var(--ink);
+    display: block;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a:focus-visible {
+    background: var(--cream);
+    color: var(--green);
+    outline: none;
+}
+
+/* Footer version: opens upwards, aligned to the left */
+.dropdown-up .dropdown-menu {
+    bottom: calc(100% + 8px);
+    left: 0;
+    right: auto;
+    top: auto;
+    transform: translateY(6px);
+}
+
+.dropdown-up.is-open .dropdown-menu {
+    transform: translateY(0);
+}
+
+/* ---------- Hero ---------- */
 
 .hero {
     min-height: clamp(235px, 29vw, 560px);
@@ -144,6 +249,8 @@ a {
     margin: 0;
 }
 
+/* ---------- Recipes ---------- */
+
 .recipe-section {
     background: var(--cream);
     padding: 8px 5% 34px;
@@ -157,10 +264,11 @@ a {
     text-align: center;
 }
 
+/* Column count adapts by itself: 3 on desktop, 2 on tablet, 1 on phone */
 .recipe-grid {
     display: grid;
     gap: 28px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
 }
 
 .recipe-card {
@@ -168,7 +276,7 @@ a {
 }
 
 .recipe-card h3 {
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
     font-style: italic;
     font-weight: 400;
     margin: 0 0 10px;
@@ -195,6 +303,8 @@ a {
 .recipe-card:nth-child(3) .card-image {
     background: linear-gradient(135deg, #74c3b6, #d68c58);
 }
+
+/* ---------- About ---------- */
 
 .about-section {
     display: grid;
@@ -228,17 +338,26 @@ a {
 
 .about-image {
     aspect-ratio: 1;
-    background: linear-gradient(135deg, #61bda9, #e4db9b);
+    background: transparent;
     border-radius: 7px;
     box-shadow: 0 5px 7px rgb(0 0 0 / 20%);
 }
 
 .about-feature {
     aspect-ratio: 2.05;
-    background: linear-gradient(110deg, #303030, #8b9490 55%, #e9d49a);
+    background: transparent;
     border-radius: 7px;
     box-shadow: 0 5px 7px rgb(0 0 0 / 20%);
     margin: 38px 0 20px;
+}
+
+.about-image img,
+.about-feature img {
+    display: block;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    width: 100%;
 }
 
 .about-copy p {
@@ -249,10 +368,13 @@ a {
     margin: 0 0 22px;
 }
 
+/* ---------- Footer ---------- */
+
 .site-footer {
     align-items: center;
     background: #ddd;
     display: flex;
+    flex-wrap: wrap;
     font-size: 1.3rem;
     font-style: italic;
     gap: 12px;
@@ -263,6 +385,8 @@ a {
 .site-footer small {
     font-size: 1rem;
 }
+
+/* ---------- Tablet and phone ---------- */
 
 @media (max-width: 650px) {
     .site-header {
@@ -282,26 +406,24 @@ a {
     }
 
     .hero {
-            min-height: 235px;
+        min-height: 235px;
     }
 
     .logo-text {
         margin-bottom: 35px;
     }
 
-    .recipe-grid {
-        gap: 10px;
-    }
-
-    .recipe-card h3 {
-        font-size: 1rem;
-    }
-
+    /* Stack the about section instead of squeezing two columns */
     .about-section {
         gap: 20px;
-        grid-template-columns: 0.8fr 1.2fr;
+        grid-template-columns: 1fr;
         padding-left: 6%;
         padding-right: 6%;
+    }
+
+    .about-image {
+        max-width: 280px;
+        margin-inline: auto;
     }
 
     .slogan {
@@ -309,7 +431,7 @@ a {
     }
 
     .about-feature {
-        margin-top: 38px;
+        margin-top: 0;
     }
 
     .site-footer {
@@ -321,4 +443,19 @@ a {
     .site-footer small {
         font-size: 0.75rem;
     }
+}
+
+/* ---------- Very small phones ---------- */
+
+@media (max-width: 420px) {
+    .site-header {
+        grid-template-columns: auto 1fr auto;
+        gap: 8px;
+    }
+
+    .site-header h1 {
+        text-align: center;
+        font-size: 1.1rem;
+    }
+
 }
