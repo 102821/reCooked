@@ -1,0 +1,317 @@
+/* Overzichtspagina 1 (Pasta): page-specific styles.
+   The header is defined here in full so it looks right even if site.css differs. */
+
+main {
+    /* One shared side gutter so the heading and the recipe grid line up */
+    --gutter: max(5%, calc((100% - 1170px) / 2));
+}
+
+/* ---------- Header: logo left, title centered, ☰ right ---------- */
+
+.site-header {
+    align-items: center;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 52px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 20; /* keeps the dropdown above the yellow band */
+}
+
+.brand {
+    align-items: center;
+    display: flex;
+    font-size: 1.25rem;
+    font-style: italic;
+    gap: 8px;
+    justify-self: start;
+}
+
+.brand strong {
+    font-weight: 700;
+}
+
+.brand-mark {
+    display: block;
+    height: 1.9rem;
+    width: auto;
+}
+
+.site-header h1 {
+    font-size: clamp(1.15rem, 3.4vw, 1.7rem);
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.main-nav {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.menu-icon,
+.footer-menu {
+    font-size: 1.8rem;
+    line-height: 0.8;
+}
+
+/* ---------- Category heading ---------- */
+
+.category-heading {
+    align-items: center;
+    background: #edc268;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    justify-content: space-between;
+    padding: 20px var(--gutter);
+}
+
+.category-heading h2 {
+    font-size: clamp(2.25rem, 6vw, 4rem);
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+}
+
+.add-recipe {
+    background: var(--green);
+    border-radius: 999px;
+    color: #fff;
+    font-size: clamp(0.95rem, 2vw, 1.3rem);
+    font-style: italic;
+    font-weight: 700;
+    padding: 12px 22px;
+    text-align: center;
+    transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+}
+
+.add-recipe:hover,
+.add-recipe:focus-visible {
+    background: #2f6844;
+    transform: translateY(-2px);
+}
+
+/* ---------- Recipe grid ---------- */
+
+.recipe-overview {
+    display: grid;
+    gap: 24px clamp(24px, 8vw, 140px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 22px 0 36px;
+    padding-inline: var(--gutter);
+}
+
+.overview-card {
+    display: block;
+    min-width: 0;
+}
+
+.overview-card img {
+    aspect-ratio: 1.52;
+    background: #d9d9d9; /* grey box while the image loads */
+    display: block;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 8px;
+}
+
+/* Orange name pill, tucked against the bottom-left of the image */
+.overview-card span {
+    background: var(--orange);
+    border-radius: 18px;
+    color: #fff;
+    display: inline-block;
+    font-size: clamp(0.85rem, 2vw, 1.35rem);
+    font-style: italic;
+    line-height: 1.25;
+    margin-left: -4px;
+    margin-top: 3px;
+    max-width: 100%;
+    padding: 6px 12px;
+}
+
+.overview-card:hover span,
+.overview-card:focus-visible span {
+    background: #aa390c;
+}
+
+.overview-card:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 4px;
+}
+
+/* ---------- Dropdowns (same on every page, can live in site.css) ---------- */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    align-items: center;
+    background: none;
+    border: 0;
+    border-radius: 5px;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    gap: 8px;
+    padding: 6px 4px;
+    transition: color 0.2s;
+}
+
+.dropdown-toggle:hover,
+.dropdown.is-open .dropdown-toggle {
+    color: var(--green);
+}
+
+.dropdown-toggle:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
+.dropdown-menu {
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 7px 16px rgb(0 0 0 / 22%);
+    list-style: none;
+    margin: 0;
+    min-width: 190px;
+    opacity: 0;
+    padding: 6px;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    transform: translateY(-6px);
+    transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+    visibility: hidden;
+    z-index: 30;
+}
+
+.dropdown.is-open .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.dropdown-menu a {
+    border-radius: 5px;
+    color: var(--ink);
+    display: block;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a:focus-visible {
+    background: var(--cream);
+    color: var(--green);
+    outline: none;
+}
+
+/* Highlights the page you're currently on */
+.dropdown-menu a[aria-current="page"] {
+    color: var(--green);
+    font-weight: 700;
+}
+
+/* Footer version: opens upwards, aligned to the left */
+.dropdown-up .dropdown-menu {
+    bottom: calc(100% + 8px);
+    left: 0;
+    right: auto;
+    top: auto;
+    transform: translateY(6px);
+}
+
+.dropdown-up.is-open .dropdown-menu {
+    transform: translateY(0);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+    align-items: center;
+    background: #ddd;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.3rem;
+    font-style: italic;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 10px 22px;
+}
+
+.site-footer small {
+    font-size: 1rem;
+}
+
+/* ---------- Phone ---------- */
+
+@media (max-width: 650px) {
+    main {
+        --gutter: 8%;
+    }
+
+    .site-header {
+        min-height: 48px;
+        padding: 0 14px;
+    }
+
+    .brand {
+        font-size: 1.1rem;
+    }
+
+    .category-heading {
+        padding-block: 16px;
+    }
+
+    .add-recipe {
+        padding: 8px 14px;
+    }
+
+    .recipe-overview {
+        gap: 20px 10vw;
+        margin-top: 18px;
+    }
+
+    .overview-card span {
+        padding: 4px 10px;
+    }
+
+    .site-footer {
+        font-size: 1rem;
+        gap: 6px;
+        padding: 9px 12px;
+    }
+
+    .site-footer small {
+        font-size: 0.75rem;
+    }
+}
+
+/* ---------- Very small phones ---------- */
+
+@media (max-width: 400px) {
+    .brand {
+        font-size: 1rem;
+        gap: 6px;
+    }
+
+    .brand-mark {
+        height: 1.6rem;
+    }
+
+    .site-header h1 {
+        font-size: 1rem;
+    }
+}
