@@ -1,6 +1,10 @@
 /* Overzichtspagina 1 (Pasta): page-specific styles.
    The header is defined here in full so it looks right even if site.css differs. */
 
+body {
+    margin: 0;
+}
+
 main {
     /* One shared side gutter so the heading and the recipe grid line up */
     --gutter: max(5%, calc((100% - 1170px) / 2));
