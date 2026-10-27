@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | reCooked</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+    <header class="login-header">
+        <a class="login-brand" href="../homepage.html" aria-label="reCooked home">
+            <strong>reCooked</strong>
+            <img src="../imgrecooked/homepageimg/recooked_logo.png" alt="" aria-hidden="true">
+        </a>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme">☼</button>
+    </header>
+
+    <main>
+        <div id="login-panel">
+            <section>
+                <h1>User login</h1>
+                <form action="../actions/login.php" method="post">
+                    <label class="visually-hidden" for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+
+                    <label class="visually-hidden" for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+
+                    <button type="submit">Login</button>
+                </form>
+
+                <div class="login-links">
+                    <a href="signup.html">Don't have an account?</a>
+                    <a href="#forgot-password">Forgot password?</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="login-footer">
+        <div class="footer-socials">
+            <span>socials</span>
+            <button type="button" aria-label="Open socials menu">☰</button>
+        </div>
+        <span class="footer-label">footer</span>
+        <small>reCooked copyright 2026 ©</small>
+    </footer>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        const savedTheme = localStorage.getItem('recooked-theme');
+
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = '☀';
+            themeToggle.setAttribute('aria-pressed', 'true');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = isDark ? '☀' : '☼';
+            themeToggle.setAttribute('aria-pressed', String(isDark));
+            localStorage.setItem('recooked-theme', isDark ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>

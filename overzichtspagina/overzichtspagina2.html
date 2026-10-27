@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dessert recipes | reCooked</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/site.css">
+    <link rel="stylesheet" href="../css/overzichtstyle2.css">
+</head>
+
+<body>
+    <div class="site-shell">
+        <header class="site-header">
+            <a class="brand" href="../homepage.html" aria-label="reCooked home">
+                <strong>reCooked</strong>
+                <img class="brand-mark" src="../imgrecooked/homepageimg/recooked_logo.png" alt="" aria-hidden="true">
+            </a>
+
+            <h1>Explore Recipes</h1>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button"
+                            aria-label="Open menu" aria-expanded="false" aria-controls="main-menu">
+                        <span class="menu-icon" aria-hidden="true"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" id="main-menu">
+                        <li><a href="overzichtspagina1.html">Pasta</a></li>
+                        <li><a href="overzichtspagina2.html" aria-current="page">Desserts</a></li>
+                        <li><a href="overzichtspagina3.html">Overige recipes</a></li>
+                        <li><a href="../user/login.html">Login / sign up</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="category-heading" aria-labelledby="category-title">
+                <h2 id="category-title">Desserts</h2>
+                <a class="add-recipe" href="../user/login.html">Voeg je recept</a>
+            </section>
+
+            <section class="recipe-overview" aria-label="Dessert recipes">
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/banana%20chocolate%20chip%20cake.png" alt="Banana chocolate chip cake">
+                    <span>Banana chocolate chip cake</span>
+                    <small class="card-details">25 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/brownies.png" alt="Brownies">
+                    <span>Brownies</span>
+                    <small class="card-details">40 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/cherry%20pie.png" alt="Cherry pie">
+                    <span>Cherry pie</span>
+                    <small class="card-details">15 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/chocolate%20pudding%20dessert.png" alt="Chocolate pudding dessert">
+                    <span>Chocolate pudding dessert</span>
+                    <small class="card-details">35 min &middot; Medium</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/creme%20brulee.png" alt="Creme brulee">
+                    <span>Creme brulee</span>
+                    <small class="card-details">25 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/fresh%20peach%20dessert.png" alt="Fresh peach dessert">
+                    <span>Fresh peach dessert</span>
+                    <small class="card-details">30 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/lemon%20ricotta%20dessert.png" alt="Lemon ricotta dessert">
+                    <span>Lemon ricotta dessert</span>
+                    <small class="card-details">25 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/pumpkin%20dessert.png" alt="Pumpkin dessert">
+                    <span>Pumpkin dessert</span>
+                    <small class="card-details">45 min &middot; Medium</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/strawberry%20angel%20food.png" alt="Strawberry angel food">
+                    <span>Strawberry angel food</span>
+                    <small class="card-details">20 min &middot; Easy</small>
+                </a>
+                <a class="overview-card" href="../detailpagina.html">
+                    <img src="../imgrecooked/desserts/strawberry%20twinkie.png" alt="Strawberry twinkie">
+                    <span>Strawberry twinkie</span>
+                    <small class="card-details">20 min &middot; Medium</small>
+                </a>
+            </section>
+        </main>
+
+        <footer class="site-footer" id="socials">
+            <div class="dropdown dropdown-up">
+                <button class="dropdown-toggle" type="button"
+                        aria-expanded="false" aria-controls="socials-menu">
+                    <span>socials</span>
+                    <span class="menu-icon" aria-hidden="true"></span>
+                </button>
+
+                <!-- Change the href of the 3 socials below -->
+                <ul class="dropdown-menu" id="socials-menu">
+                    <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+                    <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></li>
+                    <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a></li>
+                </ul>
+            </div>
+
+            <small>reCooked copyright 2026 ©</small>
+        </footer>
+    </div>
+
+    <script src="../js/dropdown.js"></script>
+</body>
+</html>

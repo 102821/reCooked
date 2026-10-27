@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pasta recipes | reCooked</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/site.css">
     <link rel="stylesheet" href="../css/overzichtstyle1.css">
 </head>
 
@@ -19,9 +25,9 @@
 
             <nav class="main-nav" aria-label="Main navigation">
                 <div class="dropdown">
-                    <button class="dropdown-toggle menu-link" type="button"
+                    <button class="dropdown-toggle" type="button"
                             aria-label="Open menu" aria-expanded="false" aria-controls="main-menu">
-                        <span class="menu-icon" aria-hidden="true">☰</span>
+                        <span class="menu-icon" aria-hidden="true"></span>
                     </button>
 
                     <ul class="dropdown-menu" id="main-menu">
@@ -37,49 +43,59 @@
         <main>
             <section class="category-heading" aria-labelledby="category-title">
                 <h2 id="category-title">Pasta</h2>
-                <a class="add-recipe" href="../invoerpagina.html">Voeg je recept</a>
+                <a class="add-recipe" href="../user/login.html">Voeg je recept</a>
             </section>
 
             <section class="recipe-overview" aria-label="Pasta recipes">
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/baked%20feta%20pasta.png" alt="Baked feta pasta">
                     <span>Baked feta pasta</span>
+                    <small class="card-details">25 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/baked%20spaghetti.png" alt="Baked spaghetti">
                     <span>Baked spaghetti</span>
+                    <small class="card-details">40 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/buttered%20noodles.png" alt="Buttered noodles">
                     <span>Buttered noodles</span>
+                    <small class="card-details">15 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/chicken%20alfredo.png" alt="Chicken alfredo">
                     <span>Chicken alfredo</span>
+                    <small class="card-details">35 min &middot; Medium</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/creamy%20garlic%20pasta.png" alt="Creamy garlic pasta">
                     <span>Creamy garlic pasta</span>
+                    <small class="card-details">25 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/feta%20tomato%20pasta.png" alt="Feta tomato pasta">
                     <span>Feta tomato pasta</span>
+                    <small class="card-details">30 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/garlic%20herb%20linguine.png" alt="Garlic herb linguine">
                     <span>Garlic herb linguine</span>
+                    <small class="card-details">25 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/mexican%20mostaccioli.png" alt="Mexican mostaccioli">
                     <span>Mexican mostaccioli</span>
+                    <small class="card-details">45 min &middot; Medium</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/simple%20ramen.png" alt="Simple ramen">
                     <span>Simple ramen</span>
+                    <small class="card-details">20 min &middot; Easy</small>
                 </a>
                 <a class="overview-card" href="../detailpagina.html">
                     <img src="../imgrecooked/pasta/spaghetti%20cacio%20pepe.png" alt="Spaghetti cacio e pepe">
                     <span>Spaghetti cacio e pepe</span>
+                    <small class="card-details">20 min &middot; Medium</small>
                 </a>
             </section>
         </main>
@@ -89,7 +105,7 @@
                 <button class="dropdown-toggle" type="button"
                         aria-expanded="false" aria-controls="socials-menu">
                     <span>socials</span>
-                    <span class="footer-menu" aria-hidden="true">☰</span>
+                    <span class="menu-icon" aria-hidden="true"></span>
                 </button>
 
                 <!-- Change the href of the 3 socials below -->

@@ -1,0 +1,383 @@
+/* Overzichtspagina 1 (Pasta), built to match the prototype.
+   Everything the page needs is in this file, so it doesn't depend on site.css. */
+
+:root {
+    --ink: #111;
+    --cream: #fffafa;
+    --green: #3f8559;
+    --green-dark: #2f6844;
+    --orange: #cf4a0c;
+    --orange-dark: #aa390c;
+    --band: #e8ba68;
+    --grey: #d9d9d9;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Chivo', Arial, sans-serif;
+    margin: 0;
+}
+
+/* Page frame: footer is pushed to the bottom even when the page is short */
+.site-shell {
+    --content: 1000px; /* max width of the content on big screens */
+    --gutter: max(10.5%, calc((100% - var(--content)) / 2));
+    --gutter-end: max(7%, calc((100% - var(--content)) / 2));
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* ---------- Hamburger icon (drawn in CSS so it looks the same everywhere) ---------- */
+
+.menu-icon {
+    background:
+        linear-gradient(currentColor, currentColor) top / 100% 3px no-repeat,
+        linear-gradient(currentColor, currentColor) center / 100% 3px no-repeat,
+        linear-gradient(currentColor, currentColor) bottom / 100% 3px no-repeat;
+    display: block;
+    flex: none;
+    height: 16px;
+    width: 22px;
+}
+
+/* ---------- Header: logo left, title centered, ☰ right ---------- */
+
+.site-header {
+    align-items: center;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 52px;
+    padding: 6px clamp(14px, 3%, 32px);
+    position: relative;
+    z-index: 20; /* keeps the dropdown above the yellow band */
+}
+
+.brand {
+    align-items: center;
+    color: var(--ink);
+    display: flex;
+    font-size: 1.25rem;
+    font-style: italic;
+    gap: 8px;
+    justify-self: start;
+    text-decoration: none;
+}
+
+.brand:hover,
+.brand:focus-visible {
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.brand strong {
+    font-weight: 700;
+}
+
+.brand-mark {
+    display: block;
+    height: 32px;
+    object-fit: contain;
+    width: 52px;
+}
+
+.site-header h1 {
+    font-size: clamp(1rem, 3.3vw, 1.6rem);
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.main-nav {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.main-nav .dropdown-toggle {
+    padding-right: 0;
+}
+
+/* ---------- Yellow category band ---------- */
+
+.category-heading {
+    align-items: center;
+    background: var(--band);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    justify-content: space-between;
+    min-height: 72px;
+    padding: 14px var(--gutter-end) 14px var(--gutter);
+}
+
+.category-heading h2 {
+    font-size: clamp(2rem, 7vw, 3.5rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.add-recipe {
+    background: var(--green);
+    border-radius: 999px;
+    box-shadow: 0 2px 0 rgb(0 0 0 / 12%);
+    color: #fff;
+    font-size: clamp(0.8rem, 2.5vw, 1.05rem);
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 0.6em 1.2em;
+    text-align: center;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+
+.add-recipe:hover,
+.add-recipe:focus-visible {
+    background: var(--green-dark);
+    box-shadow: 0 5px 10px rgb(0 0 0 / 22%);
+    transform: translateY(-2px);
+}
+
+.add-recipe:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.add-recipe:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+}
+
+/* ---------- Recipe grid ---------- */
+
+.recipe-overview {
+    column-gap: clamp(20px, 25%, 160px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 22px 0 36px;
+    padding-inline: var(--gutter);
+    row-gap: clamp(10px, 2.2vw, 28px);
+}
+
+.overview-card {
+    display: block;
+    min-width: 0;
+}
+
+.overview-card img {
+    aspect-ratio: 1.42;
+    background: var(--grey); /* grey box while the image loads */
+    display: block;
+    object-fit: cover;
+    transition: filter 0.2s;
+    width: 100%;
+}
+
+.overview-card:hover img,
+.overview-card:focus-visible img {
+    filter: brightness(0.94);
+}
+
+/* Orange name pill, tucked against the bottom-left of the image */
+.overview-card > span {
+    background: var(--orange);
+    border-radius: 18px;
+    color: #fff;
+    display: inline-block;
+    font-size: clamp(0.85rem, 2.9vw, 1.25rem);
+    font-style: italic;
+    line-height: 1.25;
+    margin-left: -5px;
+    margin-top: 2px;
+    max-width: 100%;
+    padding: 0.28em 0.6em;
+    transition: background 0.2s;
+}
+
+.overview-card:hover span,
+.overview-card:focus-visible span {
+    background: var(--orange-dark);
+}
+
+.overview-card .card-details {
+    color: var(--ink);
+    display: block;
+    font-size: clamp(0.7rem, 1.6vw, 0.9rem);
+    font-style: normal;
+    line-height: 1.3;
+    margin: 5px 0 0;
+}
+
+.overview-card:focus-visible {
+    outline: 3px solid var(--green);
+    outline-offset: 4px;
+}
+
+/* ---------- Dropdowns (same on every page, can live in site.css) ---------- */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    align-items: center;
+    background: none;
+    border: 0;
+    border-radius: 5px;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    gap: 12px;
+    padding: 6px 4px;
+    transition: color 0.2s;
+}
+
+.dropdown-toggle:hover,
+.dropdown.is-open .dropdown-toggle {
+    color: var(--green);
+}
+
+.dropdown-toggle:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
+.dropdown-menu {
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 7px 16px rgb(0 0 0 / 22%);
+    list-style: none;
+    margin: 0;
+    min-width: 190px;
+    opacity: 0;
+    padding: 6px;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    transform: translateY(-6px);
+    transition: opacity 0.18s, transform 0.18s, visibility 0.18s;
+    visibility: hidden;
+    z-index: 30;
+}
+
+.dropdown.is-open .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.dropdown-menu a {
+    border-radius: 5px;
+    color: var(--ink);
+    display: block;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 400;
+    padding: 10px 14px;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a:focus-visible {
+    background: var(--cream);
+    color: var(--green);
+    outline: none;
+}
+
+/* Highlights the page you're currently on */
+.dropdown-menu a[aria-current="page"] {
+    color: var(--green);
+    font-weight: 700;
+}
+
+/* Footer version: opens upwards, aligned to the left */
+.dropdown-up .dropdown-menu {
+    bottom: calc(100% + 8px);
+    left: 0;
+    right: auto;
+    top: auto;
+    transform: translateY(6px);
+}
+
+.dropdown-up.is-open .dropdown-menu {
+    transform: translateY(0);
+}
+
+/* ---------- Footer: socials ☰ left, copyright right ---------- */
+
+.site-footer {
+    align-items: center;
+    background: var(--grey);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: clamp(0.9rem, 2.9vw, 1.2rem);
+    font-style: italic;
+    gap: 6px 12px;
+    justify-content: space-between;
+    min-height: 40px;
+    padding: 6px 3% 6px var(--gutter);
+}
+
+.site-footer .menu-icon {
+    height: 14px;
+    width: 20px;
+}
+
+.site-footer small {
+    font-size: clamp(0.7rem, 2.3vw, 0.95rem);
+}
+
+/* ---------- Responsive ---------- */
+
+/* Big screens: 3 columns, content stays centered */
+@media (min-width: 900px) {
+    .recipe-overview {
+        column-gap: 6%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .site-footer {
+        padding-right: var(--gutter);
+    }
+}
+
+/* Phones: a little more room for the images */
+@media (max-width: 480px) {
+    .site-shell {
+        --gutter: 8%;
+        --gutter-end: 6%;
+    }
+
+    .recipe-overview {
+        column-gap: 16%;
+        margin-top: 18px;
+    }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+    .brand,
+    .site-header h1 {
+        font-size: 0.9rem;
+    }
+
+    .brand-mark {
+        height: 1.3rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
