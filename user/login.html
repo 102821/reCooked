@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | reCooked</title>
     <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/auth.css">
 </head>
 <body>
     <header class="login-header">
@@ -29,6 +30,8 @@
                     <button type="submit">Login</button>
                 </form>
 
+                <p class="form-message" id="form-message" role="alert" hidden></p>
+
                 <div class="login-links">
                     <a href="signup.html">Don't have an account?</a>
                     <a href="#forgot-password">Forgot password?</a>
@@ -47,6 +50,20 @@
     </footer>
 
     <script>
+        const params = new URLSearchParams(window.location.search);
+        const message = document.querySelector('#form-message');
+        const messages = {
+            created: 'Account created. You can now log in.',
+            missing: 'Enter both your username and password.',
+            invalid: 'The username or password is incorrect.'
+        };
+        const messageKey = params.get('created') ? 'created' : params.get('error');
+        if (messages[messageKey]) {
+            message.textContent = messages[messageKey];
+            message.hidden = false;
+        }
+    </script>
+    <script>
         const themeToggle = document.querySelector('.theme-toggle');
         const savedTheme = localStorage.getItem('recooked-theme');
 
@@ -63,5 +80,6 @@
             localStorage.setItem('recooked-theme', isDark ? 'dark' : 'light');
         });
     </script>
+    <script src="../js/auth.js" data-endpoint="../actions/current_user.php"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="../css/site.css">
     <link rel="stylesheet" href="../css/overzichtstyle2.css">
+    <link rel="stylesheet" href="../css/auth.css">
 </head>
 
 <body>
@@ -34,7 +35,7 @@
                         <li><a href="overzichtspagina1.html">Pasta</a></li>
                         <li><a href="overzichtspagina2.html" aria-current="page">Desserts</a></li>
                         <li><a href="overzichtspagina3.html">Overige recipes</a></li>
-                        <li><a href="../user/login.html">Login / sign up</a></li>
+                        <li><a class="auth-link" href="../user/login.html">Login / sign up</a></li>
                     </ul>
                 </div>
             </nav>
@@ -121,5 +122,6 @@
     </div>
 
     <script src="../js/dropdown.js"></script>
+    <script src="../js/auth.js" data-endpoint="../actions/current_user.php"></script>
 </body>
 </html>

@@ -33,7 +33,7 @@ try {
         'password_hash' => $passwordHash,
     ]);
 } catch (PDOException $exception) {
-    if ($exception->errorInfo[1] === 1062) {
+    if (($exception->errorInfo[1] ?? null) === 1062) {
         http_response_code(409);
         exit('That username is already in use.');
     }
@@ -41,5 +41,5 @@ try {
     throw $exception;
 }
 
-header('Location: ../user/login.html');
+header('Location: ../user/login.html?created=1');
 exit;
