@@ -24,6 +24,10 @@
                 link.setAttribute('aria-label', 'Log out ' + user.username);
                 link.classList.add('profile-link');
             });
+
+            document.querySelectorAll('.add-recipe').forEach((link) => {
+                link.href = link.dataset.recipeUrl || '../invoerpagina.html';
+            });
         })
         .catch(() => {
             // Static pages remain usable when the auth endpoint is unavailable.

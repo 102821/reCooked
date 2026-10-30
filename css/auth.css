@@ -9,3 +9,24 @@
     margin: 12px 0 0;
     text-align: center;
 }
+
+.recipe-filter-label,
+.recipe-filter {
+    display: block;
+    margin: 0 0 10px auto;
+    max-width: 220px;
+}
+
+.recipe-filter {
+    border: 1px solid #c7b9ac;
+    border-radius: 6px;
+    font: inherit;
+    padding: 8px;
+}
+
+.recipe-author {
+    color: #5d5d5d;
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}

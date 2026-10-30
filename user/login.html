@@ -55,12 +55,16 @@
         const messages = {
             created: 'Account created. You can now log in.',
             missing: 'Enter both your username and password.',
-            invalid: 'The username or password is incorrect.'
+            invalid: 'The username or password is incorrect.',
+            'login-required': 'Please log in before adding a recipe.'
         };
         const messageKey = params.get('created') ? 'created' : params.get('error');
         if (messages[messageKey]) {
             message.textContent = messages[messageKey];
             message.hidden = false;
+            if (messageKey === 'created') {
+                window.alert(messages[messageKey]);
+            }
         }
     </script>
     <script>

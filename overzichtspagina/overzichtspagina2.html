@@ -44,8 +44,16 @@
         <main>
             <section class="category-heading" aria-labelledby="category-title">
                 <h2 id="category-title">Desserts</h2>
-                <a class="add-recipe" href="../user/login.html">Voeg je recept</a>
+                <a class="add-recipe" href="../user/login.html" data-recipe-url="../invoerpagina.html">Voeg je recept</a>
             </section>
+
+            <label class="recipe-filter-label" for="recipe-filter">Filter by difficulty</label>
+            <select class="recipe-filter" id="recipe-filter">
+                <option value="all">All recipes</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
 
             <section class="recipe-overview" aria-label="Dessert recipes">
                 <a class="overview-card" href="../detailpagina.html">
@@ -123,5 +131,6 @@
 
     <script src="../js/dropdown.js"></script>
     <script src="../js/auth.js" data-endpoint="../actions/current_user.php"></script>
+    <script src="../js/recipes.js" data-category="desserts" data-endpoint="../actions/recipes.php"></script>
 </body>
 </html>
