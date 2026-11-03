@@ -54,9 +54,6 @@
         card.href = '../detailpagina.html?title=' + encodeURIComponent(recipe.title) +
             '&category=' + encodeURIComponent(category);
         card.innerHTML = '<img alt=""><span></span><small class="card-details"></small>';
-        if (isDatabaseRecipe) {
-            card.insertAdjacentHTML('beforeend', '<small class="recipe-author"></small>');
-        }
         updateCard(card, recipe, isDatabaseRecipe);
         recipeGrid.append(card);
         return card;
@@ -74,10 +71,6 @@
         card.querySelector('span').textContent = recipe.title;
         card.querySelector('.card-details').textContent =
             recipe.prep_time + ' min - ' + recipe.difficulty;
-        const author = card.querySelector('.recipe-author');
-        if (author) {
-            author.textContent = 'Made by ' + recipe.username;
-        }
     }
 
     (fallbackRecipes[category] || []).forEach(([title, imagePath, prepTime, difficulty]) => {
@@ -90,11 +83,10 @@
     });
 
     function applyFilter() {
-        const selectedDifficulty = filter ? filter.value : 'all';
+        const selectedDifficulty = filter ? filter.value.toLowerCase() : 'all';
         recipeGrid.querySelectorAll('.overview-card').forEach((card) => {
-            const details = card.querySelector('.card-details');
-            const difficulty = (card.dataset.difficulty || details?.textContent || '').toLowerCase();
-            card.hidden = selectedDifficulty !== 'all' && !difficulty.includes(selectedDifficulty.toLowerCase());
+            const difficulty = (card.dataset.difficulty || '').toLowerCase();
+            card.hidden = selectedDifficulty !== 'all' && difficulty !== selectedDifficulty;
         });
     }
 
@@ -116,9 +108,6 @@
 
                 if (existingCard) {
                     existingCard.classList.add('user-recipe');
-                    if (!existingCard.querySelector('.recipe-author')) {
-                        existingCard.insertAdjacentHTML('beforeend', '<small class="recipe-author"></small>');
-                    }
                     updateCard(existingCard, recipe, true);
                     return;
                 }
