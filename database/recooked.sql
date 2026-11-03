@@ -24,6 +24,16 @@ CREATE TABLE IF NOT EXISTS recipes (
 	CONSTRAINT recipes_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS recipe_steps (
+	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	recipe_id INT UNSIGNED NOT NULL,
+	step_number SMALLINT UNSIGNED NOT NULL,
+	description TEXT NOT NULL,
+	PRIMARY KEY (id),
+	UNIQUE KEY recipe_steps_order_unique (recipe_id, step_number),
+	CONSTRAINT recipe_steps_recipe_fk FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 ALTER TABLE recipes
 	ADD COLUMN IF NOT EXISTS ingredients TEXT NULL AFTER description;
 

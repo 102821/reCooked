@@ -48,12 +48,19 @@
                 ingredients.append(item);
             });
 
-            recipe.description.split(/\r?\n/).filter(Boolean).forEach((step, index) => {
+            const recipeSteps = recipe.steps.length
+                ? recipe.steps
+                : recipe.description.split(/\r?\n/).filter(Boolean).map((text, index) => ({
+                    step_number: index + 1,
+                    description: text
+                }));
+
+            recipeSteps.forEach((step) => {
                 const item = document.createElement('li');
                 item.className = 'stap';
-                item.innerHTML = '<span class="stap-label">Stap ' + (index + 1) +
+                item.innerHTML = '<span class="stap-label">Stap ' + step.step_number +
                     '.</span><p class="stap-tekst"></p>';
-                item.querySelector('.stap-tekst').textContent = step;
+                item.querySelector('.stap-tekst').textContent = step.description;
                 steps.append(item);
             });
         })

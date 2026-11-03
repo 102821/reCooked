@@ -47,6 +47,15 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         exit;
     }
 
+    $stepsStatement = $conn->prepare(
+        'SELECT step_number, description
+         FROM recipe_steps
+         WHERE recipe_id = :recipe_id
+         ORDER BY step_number'
+    );
+    $stepsStatement->execute(['recipe_id' => $recipe['id']]);
+    $recipe['steps'] = $stepsStatement->fetchAll();
+
     echo json_encode($recipe);
     exit;
 }
