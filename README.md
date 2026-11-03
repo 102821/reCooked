@@ -24,6 +24,10 @@ HTML · CSS · JavaScript · PHP · MySQL · Git & GitHub
 3. Vul je databasegegevens in bij `config/config.php`
 4. Open `http://localhost/recooked`
 
+The database script also seeds the built-in recipes. If the database was created
+with an older version of the script, import the updated `database/recooked.sql`
+again before opening the overview pages.
+
 ## Beveiliging
 
 Gehashte wachtwoorden, prepared statements, ge-escapete output en rolcontrole aan de serverkant.
