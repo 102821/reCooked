@@ -3,6 +3,10 @@
     margin-right: 6px;
 }
 
+.add-recipe[hidden] {
+    display: none;
+}
+
 .form-message {
     color: #9b2c2c;
     font-size: 1rem;

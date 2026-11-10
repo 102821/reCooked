@@ -27,6 +27,7 @@
 
             document.querySelectorAll('.add-recipe').forEach((link) => {
                 link.href = link.dataset.recipeUrl || '../invoerpagina.html';
+                link.hidden = false;
             });
         })
         .catch(() => {

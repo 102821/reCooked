@@ -8,6 +8,12 @@ header('Content-Type: application/json; charset=utf-8');
 
 $category = (string) ($_GET['category'] ?? '');
 $allowedCategories = ['pasta', 'desserts', 'other'];
+$difficultyExpression = "CASE recipes.difficulty
+    WHEN 'makkelijk' THEN 'Easy'
+    WHEN 'gemiddeld' THEN 'Medium'
+    WHEN 'moeilijk' THEN 'Hard'
+    ELSE recipes.difficulty
+END";
 
 if (isset($_GET['id']) || isset($_GET['title'])) {
     $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -20,11 +26,11 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         exit;
     }
 
-    $query = 'SELECT recipes.id, recipes.title, recipes.description, recipes.ingredients,
-                     recipes.category, recipes.difficulty, recipes.prep_time, recipes.image_path,
-                     users.username
+    $query = 'SELECT recipes.id, recipes.title, recipes.description,
+                     recipes.prep_time_minutes AS prep_time, recipes.image_path,
+                     categories.slug AS category, ' . $difficultyExpression . ' AS difficulty
               FROM recipes
-              INNER JOIN users ON users.id = recipes.user_id
+              INNER JOIN categories ON categories.id = recipes.category_id
               WHERE ';
     $parameters = [];
 
@@ -32,7 +38,7 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         $query .= 'recipes.id = :id';
         $parameters['id'] = $id;
     } else {
-        $query .= 'recipes.title = :title AND recipes.category = :category';
+        $query .= 'recipes.title = :title AND categories.slug = :category';
         $parameters['title'] = $title;
         $parameters['category'] = $recipeCategory;
     }
@@ -46,6 +52,28 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         echo json_encode(['error' => 'Recipe not found.']);
         exit;
     }
+
+    $ingredientsStatement = $conn->prepare(
+        'SELECT ingredients.name, recipe_ingredients.quantity, recipe_ingredients.unit
+         FROM recipe_ingredients
+         INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
+         WHERE recipe_ingredients.recipe_id = :recipe_id
+         ORDER BY ingredients.name'
+    );
+    $ingredientsStatement->execute(['recipe_id' => $recipe['id']]);
+    $ingredientLines = [];
+    foreach ($ingredientsStatement->fetchAll() as $ingredient) {
+        $amount = '';
+        if ($ingredient['quantity'] !== null) {
+            $amount = rtrim(rtrim(number_format((float) $ingredient['quantity'], 2, '.', ''), '0'), '.');
+            if ($ingredient['unit'] !== null && $ingredient['unit'] !== '') {
+                $amount .= ' ' . $ingredient['unit'];
+            }
+            $amount .= ' ';
+        }
+        $ingredientLines[] = $amount . $ingredient['name'];
+    }
+    $recipe['ingredients'] = implode("\n", $ingredientLines);
 
     $stepsStatement = $conn->prepare(
         'SELECT step_number, description
@@ -66,14 +94,22 @@ if (!in_array($category, $allowedCategories, true)) {
     exit;
 }
 
-$statement = $conn->prepare(
-    'SELECT recipes.id, recipes.title, recipes.description, recipes.difficulty, recipes.prep_time,
-            recipes.image_path, users.username
-     FROM recipes
-     INNER JOIN users ON users.id = recipes.user_id
-     WHERE recipes.category = :category
-     ORDER BY recipes.created_at DESC'
-);
-$statement->execute(['category' => $category]);
+$query = 'SELECT recipes.id, recipes.title, ' . $difficultyExpression . ' AS difficulty,
+                 recipes.prep_time_minutes AS prep_time, recipes.image_path
+          FROM recipes
+          INNER JOIN categories ON categories.id = recipes.category_id
+          WHERE ';
+$parameters = [];
+
+if ($category === 'other') {
+    $query .= "categories.slug NOT IN ('pasta', 'desserts')";
+} else {
+    $query .= 'categories.slug = :category';
+    $parameters['category'] = $category;
+}
+
+$query .= ' ORDER BY recipes.created_at DESC';
+$statement = $conn->prepare($query);
+$statement->execute($parameters);
 
 echo json_encode($statement->fetchAll());

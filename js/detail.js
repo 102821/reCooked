@@ -27,30 +27,35 @@
     fetch(endpoint + '?' + query)
         .then((response) => {
             if (!response.ok) {
-                throw new Error('Recipe could not be loaded.');
+                throw new Error('Recipe could not be loaded (HTTP ' + response.status + ').');
             }
             return response.json();
         })
         .then((recipe) => {
             document.title = recipe.title + ' | reCooked';
             title.textContent = recipe.title;
-            description.textContent = recipe.description;
-            image.src = recipe.image_path;
+            description.textContent = recipe.description || '';
+            if (recipe.image_path) {
+                image.src = recipe.image_path;
+            } else {
+                image.hidden = true;
+            }
             image.alt = recipe.title;
             time.textContent = recipe.prep_time + ' min';
             difficulty.textContent = recipe.difficulty;
             backLink.href = 'overzichtspagina/overzichtspagina' +
-                ({ pasta: '1', desserts: '2', other: '3' }[recipe.category] || '1') + '.html';
+                (recipe.category === 'pasta' ? '1' :
+                    recipe.category === 'desserts' ? '2' : '3') + '.html';
 
-            recipe.ingredients.split(/\r?\n/).filter(Boolean).forEach((ingredient) => {
+            (recipe.ingredients || '').split(/\r?\n/).filter(Boolean).forEach((ingredient) => {
                 const item = document.createElement('li');
                 item.textContent = ingredient;
                 ingredients.append(item);
             });
 
-            const recipeSteps = recipe.steps.length
+            const recipeSteps = Array.isArray(recipe.steps) && recipe.steps.length
                 ? recipe.steps
-                : recipe.description.split(/\r?\n/).filter(Boolean).map((text, index) => ({
+                : (recipe.description || '').split(/\r?\n/).filter(Boolean).map((text, index) => ({
                     step_number: index + 1,
                     description: text
                 }));
@@ -65,7 +70,8 @@
             });
         })
         .catch((error) => {
+            console.error(error);
             title.textContent = 'Recipe unavailable';
-            description.textContent = error.message;
+            description.textContent = 'The recipe could not be loaded. Please try again later.';
         });
 }());
