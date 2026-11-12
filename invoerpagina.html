@@ -45,10 +45,11 @@
         <h2 class="page-title">Nieuw recept toevoegen</h2>
 
         <form class="recipe-form" action="actions/create_recipe.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="recipe_id" id="recipe-id" value="">
             <div class="col col-left">
                 <label class="card photo-drop" id="photo-drop" for="image">
                     <input type="file" id="image" name="image"
-                           accept="image/jpeg,image/png,image/webp" required>
+                           accept="image/jpeg,image/png,image/webp">
                     <span class="photo-placeholder" id="photo-placeholder">
                             <span class="photo-add">+foto toevoegen</span>
                             <span class="photo-drag">of sleep foto hier</span>
@@ -162,6 +163,7 @@
 <script src="js/dropdown.js"></script>
 <script src="js/auth.js" data-endpoint="actions/current_user.php"></script>
 <script src="js/add.js" data-auth-endpoint="actions/current_user.php"
-        data-ingredients-endpoint="actions/ingredients.php"></script>
+        data-ingredients-endpoint="actions/ingredients.php"
+        data-recipes-endpoint="actions/recipes.php"></script>
 </body>
 </html>

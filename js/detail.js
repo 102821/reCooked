@@ -18,6 +18,10 @@
     const ingredients = document.querySelector('.ingredienten');
     const steps = document.querySelector('.stappen');
     const backLink = document.querySelector('.btn-terug');
+    const actions = document.querySelector('.recipe-actions');
+    const editLink = document.querySelector('.btn-recipe-edit');
+    const deleteButton = document.querySelector('.btn-recipe-delete');
+    const actionMessage = document.querySelector('.recipe-action-message');
 
     const query = recipeId
         ? 'id=' + encodeURIComponent(recipeId)
@@ -47,6 +51,39 @@
                 (recipe.category === 'pasta' ? '1' :
                     recipe.category === 'desserts' ? '2' : '3') + '.html';
 
+            if (recipe.can_manage) {
+                actions.hidden = false;
+                editLink.href = 'invoerpagina.html?edit=' + encodeURIComponent(recipe.id);
+                deleteButton.addEventListener('click', () => {
+                    if (!window.confirm('Weet je zeker dat je dit recept wilt verwijderen?')) {
+                        return;
+                    }
+
+                    deleteButton.disabled = true;
+                    actionMessage.textContent = 'Recept verwijderen...';
+                    fetch('actions/delete_recipe.php', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ id: recipe.id })
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Recipe could not be deleted (HTTP ' + response.status + ').');
+                            }
+                            return response.json();
+                        })
+                        .then(() => {
+                            window.location.assign(backLink.href);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            actionMessage.textContent = 'Het recept kon niet worden verwijderd. Probeer het opnieuw.';
+                            deleteButton.disabled = false;
+                        });
+                });
+            }
+
             (recipe.ingredients || '').split(/\r?\n/).filter(Boolean).forEach((ingredient) => {
                 const item = document.createElement('li');
                 item.textContent = ingredient;
@@ -75,3 +112,4 @@
             description.textContent = 'The recipe could not be loaded. Please try again later.';
         });
 }());
+//aa

@@ -15,6 +15,39 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once __DIR__ . '/../database/db.php';
+require_once __DIR__ . '/recipe_permissions.php';
+
+$submittedRecipeId = trim((string) ($_POST['recipe_id'] ?? ''));
+$recipeId = $submittedRecipeId === '' ? null : filter_var($submittedRecipeId, FILTER_VALIDATE_INT);
+$isEditing = $submittedRecipeId !== '';
+$existingRecipe = null;
+
+if ($isEditing && ($recipeId === false || $recipeId < 1)) {
+    http_response_code(400);
+    exit('Invalid recipe ID.');
+}
+
+if ($isEditing) {
+    try {
+        $accessStatement = $conn->prepare('SELECT user_id, image_path FROM recipes WHERE id = :id');
+        $accessStatement->execute(['id' => $recipeId]);
+        $existingRecipe = $accessStatement->fetch();
+        if ($existingRecipe === false) {
+            http_response_code(404);
+            exit('Recipe not found.');
+        }
+
+        $ownerId = $existingRecipe['user_id'] === null ? null : (int) $existingRecipe['user_id'];
+        if (!can_manage_recipe($conn, (int) $_SESSION['user_id'], $ownerId)) {
+            http_response_code(403);
+            exit('You are not allowed to edit this recipe.');
+        }
+    } catch (PDOException $exception) {
+        error_log('Recipe access check failed: ' . $exception->getMessage());
+        http_response_code(500);
+        exit('The recipe could not be saved.');
+    }
+}
 
 $title = trim((string) ($_POST['title'] ?? ''));
 $description = trim((string) ($_POST['description'] ?? ''));
@@ -45,18 +78,23 @@ if (
     exit('Please complete all recipe fields correctly.');
 }
 
-if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+$uploadedImage = isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK;
+$noImageSelected = !isset($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE;
+if ((!$isEditing && !$uploadedImage) || ($isEditing && !$uploadedImage && !$noImageSelected)) {
     http_response_code(400);
-    exit('Please upload a recipe image.');
+    exit('Please upload a valid recipe image.');
 }
 
-$imageInfo = getimagesize($_FILES['image']['tmp_name']);
-$allowedMimeTypes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
-$extension = $imageInfo ? ($allowedMimeTypes[$imageInfo['mime']] ?? null) : null;
+$extension = null;
+if ($uploadedImage) {
+    $imageInfo = getimagesize($_FILES['image']['tmp_name']);
+    $allowedMimeTypes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+    $extension = $imageInfo ? ($allowedMimeTypes[$imageInfo['mime']] ?? null) : null;
 
-if ($extension === null || $_FILES['image']['size'] > 5 * 1024 * 1024) {
-    http_response_code(400);
-    exit('Use a JPG, PNG, or WEBP image up to 5 MB.');
+    if ($extension === null || $_FILES['image']['size'] > 5 * 1024 * 1024) {
+        http_response_code(400);
+        exit('Use a JPG, PNG, or WEBP image up to 5 MB.');
+    }
 }
 
 try {
@@ -76,31 +114,27 @@ if ($categoryId === false) {
 }
 
 $uploadDirectory = __DIR__ . '/../uploads/recipes';
-if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true) && !is_dir($uploadDirectory)) {
-    http_response_code(500);
-    exit('The image could not be saved.');
-}
+$destination = null;
+$newImagePath = $existingRecipe['image_path'] ?? '';
+if ($uploadedImage) {
+    if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true) && !is_dir($uploadDirectory)) {
+        http_response_code(500);
+        exit('The image could not be saved.');
+    }
 
-$fileName = bin2hex(random_bytes(16)) . '.' . $extension;
-$destination = $uploadDirectory . '/' . $fileName;
+    $fileName = bin2hex(random_bytes(16)) . '.' . $extension;
+    $destination = $uploadDirectory . '/' . $fileName;
 
-if (!move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-    http_response_code(500);
-    exit('The image could not be saved.');
+    if (!move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
+        http_response_code(500);
+        exit('The image could not be saved.');
+    }
+    $newImagePath = 'uploads/recipes/' . $fileName;
 }
 
 try {
     $conn->beginTransaction();
-    $statement = $conn->prepare(
-        'INSERT INTO recipes
-            (user_id, category_id, title, description, ingredients, category, difficulty,
-             prep_time_minutes, prep_time, image_path)
-         VALUES
-            (:user_id, :category_id, :title, :description, :ingredients, :category, :difficulty,
-             :prep_time_minutes, :prep_time, :image_path)'
-    );
-    $statement->execute([
-        'user_id' => $_SESSION['user_id'],
+    $recipeValues = [
         'category_id' => $categoryId,
         'title' => $title,
         'description' => $description,
@@ -109,15 +143,54 @@ try {
         'difficulty' => $difficulty,
         'prep_time_minutes' => $prepTime,
         'prep_time' => $prepTime,
-        'image_path' => 'uploads/recipes/' . $fileName,
-    ]);
+        'image_path' => $newImagePath,
+    ];
+    if ($isEditing) {
+        $previousIngredientsStatement = $conn->prepare(
+            'SELECT ingredients.name, recipe_ingredients.quantity, recipe_ingredients.unit
+             FROM recipe_ingredients
+             INNER JOIN ingredients ON ingredients.id = recipe_ingredients.ingredient_id
+             WHERE recipe_ingredients.recipe_id = :recipe_id'
+        );
+        $previousIngredientsStatement->execute(['recipe_id' => $recipeId]);
+        $previousIngredients = [];
+        foreach ($previousIngredientsStatement->fetchAll() as $previousIngredient) {
+            $previousIngredients[strtolower($previousIngredient['name'])] = $previousIngredient;
+        }
 
-    $recipeId = $conn->lastInsertId();
+        $statement = $conn->prepare(
+            'UPDATE recipes
+             SET category_id = :category_id, title = :title, description = :description,
+                 ingredients = :ingredients, category = :category, difficulty = :difficulty,
+                 prep_time_minutes = :prep_time_minutes, prep_time = :prep_time, image_path = :image_path
+             WHERE id = :id'
+        );
+        $statement->execute($recipeValues + ['id' => $recipeId]);
+        $conn->prepare('DELETE FROM recipe_ingredients WHERE recipe_id = :recipe_id')
+            ->execute(['recipe_id' => $recipeId]);
+        $conn->prepare('DELETE FROM recipe_steps WHERE recipe_id = :recipe_id')
+            ->execute(['recipe_id' => $recipeId]);
+    } else {
+        $statement = $conn->prepare(
+            'INSERT INTO recipes
+                (user_id, category_id, title, description, ingredients, category, difficulty,
+                 prep_time_minutes, prep_time, image_path)
+             VALUES
+                (:user_id, :category_id, :title, :description, :ingredients, :category, :difficulty,
+                 :prep_time_minutes, :prep_time, :image_path)'
+        );
+        $statement->execute($recipeValues + [
+            'user_id' => $_SESSION['user_id'],
+        ]);
+        $recipeId = (int) $conn->lastInsertId();
+        $previousIngredients = [];
+    }
+
     $findIngredient = $conn->prepare('SELECT id FROM ingredients WHERE name = :name');
     $createIngredient = $conn->prepare('INSERT INTO ingredients (name) VALUES (:name)');
     $linkIngredient = $conn->prepare(
-        'INSERT INTO recipe_ingredients (recipe_id, ingredient_id)
-         VALUES (:recipe_id, :ingredient_id)'
+        'INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit)
+         VALUES (:recipe_id, :ingredient_id, :quantity, :unit)'
     );
     $linkedIngredients = [];
 
@@ -130,9 +203,12 @@ try {
         }
 
         if (!isset($linkedIngredients[$ingredientId])) {
+            $previousIngredient = $previousIngredients[strtolower($ingredientName)] ?? null;
             $linkIngredient->execute([
                 'recipe_id' => $recipeId,
                 'ingredient_id' => $ingredientId,
+                'quantity' => $previousIngredient['quantity'] ?? null,
+                'unit' => $previousIngredient['unit'] ?? null,
             ]);
             $linkedIngredients[$ingredientId] = true;
         }
@@ -154,7 +230,7 @@ try {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    if (is_file($destination) && !unlink($destination)) {
+    if ($destination !== null && is_file($destination) && !unlink($destination)) {
         error_log('Could not remove recipe image after a failed save: ' . $destination);
     }
 
@@ -168,11 +244,23 @@ try {
     exit('The recipe could not be saved.');
 }
 
+$oldImagePath = $existingRecipe['image_path'] ?? '';
+if (
+    $isEditing && $destination !== null && str_starts_with($oldImagePath, 'uploads/recipes/')
+    && is_file(__DIR__ . '/../' . $oldImagePath) && !unlink(__DIR__ . '/../' . $oldImagePath)
+) {
+    error_log('Could not remove the replaced recipe image: ' . $oldImagePath);
+}
+
 $overviewPages = [
     'pasta' => 'overzichtspagina/overzichtspagina1.html',
     'desserts' => 'overzichtspagina/overzichtspagina2.html',
     'other' => 'overzichtspagina/overzichtspagina3.html',
 ];
 
-header('Location: ../' . $overviewPages[$category] . '?created=1');
+if ($isEditing) {
+    header('Location: ../detailpagina.html?id=' . rawurlencode((string) $recipeId) . '&updated=1');
+} else {
+    header('Location: ../' . $overviewPages[$category] . '?created=1');
+}
 exit;

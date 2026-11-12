@@ -2,6 +2,7 @@
     const script = document.currentScript;
     const authEndpoint = script && script.dataset.authEndpoint;
     const ingredientsEndpoint = script && script.dataset.ingredientsEndpoint;
+    const recipesEndpoint = script && script.dataset.recipesEndpoint;
     const form = document.querySelector('.recipe-form');
 
     if (!form) {
@@ -19,7 +20,12 @@
     const photoPreview = document.querySelector('#photo-preview');
     const photoPlaceholder = document.querySelector('#photo-placeholder');
     const photoRemove = document.querySelector('#photo-remove');
+    const recipeIdField = document.querySelector('#recipe-id');
+    const recipeId = new URLSearchParams(window.location.search).get('edit');
+    const submitButton = form.querySelector('button[type="submit"]');
     let photoUrl = '';
+    imageInput.required = !recipeId;
+    submitButton.disabled = Boolean(recipeId);
 
     function showMessage(text, type) {
         message.textContent = text;
@@ -139,6 +145,57 @@
         addRow(stepList, 'step', false);
     }
 
+    if (recipeId) {
+        if (!recipesEndpoint) {
+            showMessage('Het recept kon niet worden geladen. Probeer het later opnieuw.', 'error');
+        } else {
+            fetch(recipesEndpoint + '?id=' + encodeURIComponent(recipeId), { credentials: 'same-origin' })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Recipe could not be loaded (HTTP ' + response.status + ').');
+                    }
+                    return response.json();
+                })
+                .then((recipe) => {
+                    if (!recipe.can_manage) {
+                        throw new Error('You are not allowed to edit this recipe.');
+                    }
+
+                    recipeIdField.value = recipe.id;
+                    submitButton.disabled = false;
+                    document.querySelector('.page-title').textContent = 'Recept aanpassen';
+                    submitButton.textContent = 'Wijzigingen opslaan';
+                    document.querySelector('#title').value = recipe.title;
+                    document.querySelector('#description').value = recipe.description || '';
+                    document.querySelector('#category').value = recipe.category;
+                    document.querySelector('#difficulty').value = recipe.difficulty;
+                    document.querySelector('#prep_time').value = recipe.prep_time;
+
+                    ingredientList.replaceChildren();
+                    (recipe.ingredient_names || []).forEach(() => addRow(ingredientList, 'ingredient', false));
+                    (recipe.ingredient_names || []).forEach((name, index) => {
+                        ingredientList.children[index].querySelector('.ingredient-input').value = name;
+                    });
+
+                    stepList.replaceChildren();
+                    (recipe.steps || []).forEach(() => addRow(stepList, 'step', false));
+                    (recipe.steps || []).forEach((step, index) => {
+                        stepList.children[index].querySelector('.step-input').value = step.description;
+                    });
+
+                    if (recipe.image_path) {
+                        photoPreview.src = recipe.image_path;
+                        photoPreview.hidden = false;
+                        photoPlaceholder.hidden = true;
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    showMessage('Dit recept kon niet worden geladen of je mag het niet aanpassen.', 'error');
+                });
+        }
+    }
+
     document.querySelector('#add-ingredient').addEventListener('click', () => {
         addRow(ingredientList, 'ingredient', true);
     });
@@ -243,9 +300,8 @@
         }
 
         ingredientsField.value = ingredients.join('\n');
-        const submitButton = form.querySelector('button[type="submit"]');
         submitButton.disabled = true;
-        submitButton.textContent = 'Bezig met publiceren...';
+        submitButton.textContent = recipeId ? 'Bezig met opslaan...' : 'Bezig met publiceren...';
     });
 
     if (authEndpoint) {

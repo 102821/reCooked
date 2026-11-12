@@ -19,7 +19,7 @@ if ($username === '' || $password === '') {
 
 try {
 	$statement = $conn->prepare(
-		'SELECT id, username, password_hash FROM users WHERE username = :username LIMIT 1'
+		'SELECT id, username, password_hash, role FROM users WHERE username = :username LIMIT 1'
 	);
 	$statement->execute(['username' => $username]);
 	$user = $statement->fetch();
@@ -37,6 +37,7 @@ session_start();
 session_regenerate_id(true);
 $_SESSION['user_id'] = (int) $user['id'];
 $_SESSION['username'] = (string) $user['username'];
+$_SESSION['role'] = (string) $user['role'];
 
 header('Location: ../homepage.html');
 exit;

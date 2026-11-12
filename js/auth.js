@@ -16,9 +16,9 @@
 
             authLinks.forEach((link) => {
                 const icon = document.createElement('span');
-                icon.className = 'profile-icon';
-                icon.setAttribute('aria-hidden', 'true');
-                icon.innerHTML = '&#128100;';
+                // icon.className = 'profile-icon';
+                // icon.setAttribute('aria-hidden', 'true');
+                // icon.innerHTML = '&#128100;';
                 link.replaceChildren(icon, document.createTextNode(user.username));
                 link.href = endpoint.replace('current_user.php', 'logout.php');
                 link.setAttribute('aria-label', 'Log out ' + user.username);

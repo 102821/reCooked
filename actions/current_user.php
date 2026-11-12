@@ -9,6 +9,7 @@ if (isset($_SESSION['user_id'], $_SESSION['username'])) {
     echo json_encode([
         'authenticated' => true,
         'username' => $_SESSION['username'],
+        'role' => $_SESSION['role'] ?? 'user',
     ]);
     exit;
 }

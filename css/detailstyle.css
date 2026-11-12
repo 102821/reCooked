@@ -236,6 +236,42 @@ a {
 .label-tijd   { background: var(--geel); }
 .label-niveau { background: var(--rood); color: var(--wit); }
 
+.recipe-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.recipe-actions[hidden] {
+    display: none;
+}
+
+.btn-recipe-edit,
+.btn-recipe-delete {
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font: inherit;
+    padding: 0.65rem 1rem;
+}
+
+.btn-recipe-edit {
+    background: var(--groen);
+    color: var(--wit);
+}
+
+.btn-recipe-delete {
+    background: var(--rood);
+    color: var(--wit);
+}
+
+.recipe-action-message {
+    flex-basis: 100%;
+    margin: 0;
+}
+
 /* ---------- Onderste deel ---------- */
 .recept-details {
     display: grid;

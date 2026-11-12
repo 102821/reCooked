@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../database/db.php';
+require_once __DIR__ . '/recipe_permissions.php';
 
+session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 $category = (string) ($_GET['category'] ?? '');
@@ -26,7 +28,7 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         exit;
     }
 
-    $query = 'SELECT recipes.id, recipes.title, recipes.description,
+    $query = 'SELECT recipes.id, recipes.user_id, recipes.title, recipes.description,
                      recipes.prep_time_minutes AS prep_time, recipes.image_path,
                      categories.slug AS category, ' . $difficultyExpression . ' AS difficulty
               FROM recipes
@@ -53,6 +55,12 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         exit;
     }
 
+    $recipe['can_manage'] = false;
+    if (isset($_SESSION['user_id'])) {
+        $ownerId = $recipe['user_id'] === null ? null : (int) $recipe['user_id'];
+        $recipe['can_manage'] = can_manage_recipe($conn, (int) $_SESSION['user_id'], $ownerId);
+    }
+
     $ingredientsStatement = $conn->prepare(
         'SELECT ingredients.name, recipe_ingredients.quantity, recipe_ingredients.unit
          FROM recipe_ingredients
@@ -62,7 +70,9 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
     );
     $ingredientsStatement->execute(['recipe_id' => $recipe['id']]);
     $ingredientLines = [];
+    $recipe['ingredient_names'] = [];
     foreach ($ingredientsStatement->fetchAll() as $ingredient) {
+        $recipe['ingredient_names'][] = $ingredient['name'];
         $amount = '';
         if ($ingredient['quantity'] !== null) {
             $amount = rtrim(rtrim(number_format((float) $ingredient['quantity'], 2, '.', ''), '0'), '.');
@@ -74,6 +84,7 @@ if (isset($_GET['id']) || isset($_GET['title'])) {
         $ingredientLines[] = $amount . $ingredient['name'];
     }
     $recipe['ingredients'] = implode("\n", $ingredientLines);
+    unset($recipe['user_id']);
 
     $stepsStatement = $conn->prepare(
         'SELECT step_number, description
