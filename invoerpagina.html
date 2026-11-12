@@ -1,61 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Add a recipe | reCooked</title>
-	<link rel="stylesheet" href="css/invoerstyle.css">
-	<link rel="stylesheet" href="css/auth.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nieuw recept toevoegen | reCooked</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@1,400;1,500;1,600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/overzichtstyle1.css">
+    <link rel="stylesheet" href="css/invoerstyle.css">
+    <link rel="stylesheet" href="css/auth.css">
 </head>
+
 <body>
-	<header class="recipe-header">
-		<a href="homepage.html">reCooked</a>
-		<a class="auth-link" href="user/login.html">Login / sign up</a>
-	</header>
+<div class="site-shell">
+    <header class="site-header">
+        <a class="brand" href="homepage.html" aria-label="reCooked home">
+            <strong>reCooked</strong>
+            <img class="brand-mark" src="imgrecooked/homepageimg/recooked_logo.png" alt="" aria-hidden="true">
+        </a>
 
-	<main class="recipe-form-page">
-		<h1>Add your recipe</h1>
-		<p>Share a recipe with the reCooked community.</p>
+        <h1></h1>
 
-		<form class="recipe-form" action="actions/create_recipe.php" method="post">
-			<label for="title">Recipe name</label>
-			<input id="title" name="title" type="text" maxlength="100" required>
+        <nav class="main-nav" aria-label="Hoofdnavigatie">
+            <div class="dropdown">
+                <button class="dropdown-toggle" type="button"
+                        aria-label="Open menu" aria-expanded="false" aria-controls="main-menu">
+                    <span class="menu-icon" aria-hidden="true"></span>
+                </button>
 
-			<label for="category">Category</label>
-			<select id="category" name="category" required>
-				<option value="">Choose a category</option>
-				<option value="pasta">Pasta</option>
-				<option value="desserts">Desserts</option>
-				<option value="other">Other recipes</option>
-			</select>
+                <ul class="dropdown-menu" id="main-menu">
+                    <li><a href="overzichtspagina/overzichtspagina1.html">Pasta</a></li>
+                    <li><a href="overzichtspagina/overzichtspagina2.html">Desserts</a></li>
+                    <li><a href="overzichtspagina/overzichtspagina3.html">Overige recepten</a></li>
+                    <li><a class="auth-link" href="user/login.html">Login / sign up</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-			<label for="difficulty">Difficulty</label>
-			<select id="difficulty" name="difficulty" required>
-				<option value="">Choose a difficulty</option>
-				<option value="Easy">Easy</option>
-				<option value="Medium">Medium</option>
-				<option value="Hard">Hard</option>
-			</select>
+    <main class="container recipe-form-page">
+        <h2 class="page-title">Nieuw recept toevoegen</h2>
 
-			<label for="prep_time">Preparation time (minutes)</label>
-			<input id="prep_time" name="prep_time" type="number" min="1" max="1440" required>
+        <form class="recipe-form" action="actions/create_recipe.php" method="post" enctype="multipart/form-data">
+            <div class="col col-left">
+                <label class="card photo-drop" id="photo-drop" for="image">
+                    <input type="file" id="image" name="image"
+                           accept="image/jpeg,image/png,image/webp" required>
+                    <span class="photo-placeholder" id="photo-placeholder">
+                            <span class="photo-add">+foto toevoegen</span>
+                            <span class="photo-drag">of sleep foto hier</span>
+                        </span>
+                    <img id="photo-preview" class="photo-preview" alt="Voorbeeld van de gekozen receptfoto" hidden>
+                    <button type="button" class="photo-remove" id="photo-remove"
+                            aria-label="Foto verwijderen" hidden>&times;</button>
+                </label>
 
-			<label for="description">Description</label>
-			<textarea id="description" name="description" rows="4" required></textarea>
+                <section class="card ingredients" aria-labelledby="ingredients-title">
+                    <h2 class="card-title" id="ingredients-title">Ingrediënten toevoegen</h2>
+                    <div class="ingredient-picker">
+                        <label class="sr-only" for="ingredient-picker">Kies een beschikbaar ingrediënt</label>
+                        <select id="ingredient-picker" disabled>
+                            <option value="">Beschikbare ingrediënten laden...</option>
+                        </select>
+                        <button type="button" class="btn btn-green" id="add-selected-ingredient" disabled>
+                            Toevoegen
+                        </button>
+                    </div>
+                    <ol class="numbered-list" id="ingredient-list"></ol>
+                    <input type="hidden" id="ingredients" name="ingredients">
+                    <button type="button" class="btn btn-green btn-add" id="add-ingredient">
+                        Voeg ingrediënt toe
+                    </button>
+                </section>
+            </div>
 
-			<label for="ingredients">Ingredients</label>
-			<textarea id="ingredients" name="ingredients" rows="7" aria-describedby="ingredients-help" placeholder="200 g pasta&#10;2 tomatoes&#10;Salt to taste" required></textarea>
-			<small id="ingredients-help">Put one ingredient on each line. Include the amount and unit on that line if needed.</small>
+            <div class="col col-right">
+                <section class="card info" aria-labelledby="info-title">
+                    <h2 class="card-title" id="info-title">Receptinformatie</h2>
 
-			<label for="image_path">Recipe image path</label>
-			<input id="image_path" name="image_path" type="text" maxlength="255" placeholder="imgrecooked/pasta/my-recipe.png" required>
-			<small>Enter a path to an image file already in the project, relative to the project root.</small>
+                    <div class="field">
+                        <label for="title">Naam recept:</label>
+                        <input type="text" id="title" name="title" maxlength="100" required>
+                    </div>
 
-			<button type="submit">Upload recipe</button>
-		</form>
-	</main>
+                    <div class="field">
+                        <label for="description">Beschrijving:</label>
+                        <textarea id="description" name="description" rows="2" required></textarea>
+                    </div>
 
-	<script src="js/auth.js" data-endpoint="actions/current_user.php"></script>
-	<script src="js/add.js" data-auth-endpoint="actions/current_user.php"></script>
+                    <div class="field">
+                        <label for="category">Categorie:</label>
+                        <div class="select-wrap">
+                            <select id="category" name="category" required>
+                                <option value="" disabled selected>Kies een categorie</option>
+                                <option value="pasta">Pasta</option>
+                                <option value="desserts">Desserts</option>
+                                <option value="other">Overige recepten</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pill-row">
+                        <div class="pill pill-yellow">
+                            <label for="difficulty" class="sr-only">Moeilijkheid</label>
+                            <select id="difficulty" name="difficulty" required>
+                                <option value="" disabled selected>Moeilijkheid</option>
+                                <option value="Easy">Makkelijk</option>
+                                <option value="Medium">Gemiddeld</option>
+                                <option value="Hard">Moeilijk</option>
+                            </select>
+                        </div>
+
+                        <div class="pill pill-orange">
+                            <label for="prep_time" class="sr-only">Bereidingstijd in minuten</label>
+                            <input type="number" id="prep_time" name="prep_time"
+                                   min="1" max="1440" step="1" placeholder="Bereidingstijd" required>
+                            <span class="pill-unit">min</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card steps" aria-labelledby="steps-title">
+                    <h2 class="card-title" id="steps-title">Bereidingsstappen</h2>
+                    <ol class="step-list" id="step-list"></ol>
+                    <button type="button" class="btn btn-green btn-add" id="add-step">
+                        Voeg bereidingsstap toe
+                    </button>
+                </section>
+            </div>
+
+            <div class="form-actions">
+                <a class="btn btn-outline" href="homepage.html">Annuleren</a>
+                <button type="submit" class="btn btn-green btn-bordered">Publiceren</button>
+            </div>
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+        </form>
+    </main>
+
+    <footer class="site-footer" id="socials">
+        <div class="dropdown dropdown-up">
+            <button class="dropdown-toggle" type="button"
+                    aria-expanded="false" aria-controls="socials-menu">
+                <span>socials</span>
+                <span class="menu-icon" aria-hidden="true"></span>
+            </button>
+
+            <ul class="dropdown-menu" id="socials-menu">
+                <li><a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a></li>
+                <li><a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a></li>
+                <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a></li>
+            </ul>
+        </div>
+
+        <small>reCooked copyright 2026 ©</small>
+    </footer>
+</div>
+
+<script src="js/dropdown.js"></script>
+<script src="js/auth.js" data-endpoint="actions/current_user.php"></script>
+<script src="js/add.js" data-auth-endpoint="actions/current_user.php"
+        data-ingredients-endpoint="actions/ingredients.php"></script>
 </body>
 </html>
